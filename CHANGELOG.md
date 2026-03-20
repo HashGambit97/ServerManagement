@@ -1,46 +1,31 @@
-# ServerManagement Release History
+# Changelog for ServerManagement
 
-## v0.6 (2019-12-18)
+The format is based on and uses the types of changes according to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-- `Invoke-LogRotation`: Added feature to remove old archive files
-- `Register-LogRotationTask`: Added feature to remove old archive files
+## [Unreleased]
 
+### Added
 
-## v0.5 (2018-04-24)
+- For new features.
 
-- New Functions
+### Changed
 
-  - The `Get-LinuxCdpInfo` cmdlet queries a Linux server for CDP information by capturing the network packets using tcpdump.
-  - The `Install-DiskCleanupTool` cmdlet copies the Disk Cleanup executable and supporting files from the WinSxS folder the to correct installed location and creates the shortcut.
+- For changes in existing functionality.
 
-- Updates
+### Deprecated
 
-  - `Invoke-LogRotation`: Refactored the parameter name 'CompressDays' to 'KeepRaw'
-  - `Register-LogRotationTask`: Refactored the parameter name 'CompressDays' to 'KeepRaw'
+- For soon-to-be removed features.
 
+### Removed
 
-## v0.4 (2017-04-05)
+- For now removed features.
 
-- New Functions
+### Fixed
 
-  - The `Disable-SChannelFeature` cmdlet disables features in the SChannel security suite on Windows computers.  This cmdlet can be used to disable ciphers, key exchanges, and protocols that are consider insecure.
-  - The `Get-RDSession` cmdlet uses the Cassia.dll to query local or remote computers for active and disconnection Remote Desktop sessions.
+- For any bug fix.
 
-- Updates
+### Security
 
-  - Updated the build process use utilize the InvokeBuild module.
+- In case of vulnerabilities.
 
-## v0.3 (2017-02-17)
-
-- New Functions
-  - `Get-IISLogPath`: This function uses the WebAdministration module to query the IIS configuration and retreive the log file locations.
-
-## v0.2 (2017-02-16)
-
-- New Functions
-  - `Invoke-LogRotation`: Compresses log files by month
-
-## v0.1 (2017-02-15)
-
-- New Functions
-  - `Get-DfsrBacklogStatus`: Query DFSR replication backlog
