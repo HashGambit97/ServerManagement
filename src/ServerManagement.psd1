@@ -12,7 +12,7 @@
 RootModule = 'ServerManagement.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.6.0'
+ModuleVersion = '0.0.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -24,7 +24,7 @@ GUID = '172a26f6-2907-482a-b920-5e2448db4db1'
 Author = 'Trent Willingham'
 
 # Company or vendor of this module
-CompanyName = 'Unknown'
+CompanyName = 'Trent Willingham'
 
 # Copyright statement for this module
 Copyright = '(c) 2019 Trent Willingham. All rights reserved.'
@@ -33,7 +33,7 @@ Copyright = '(c) 2019 Trent Willingham. All rights reserved.'
 Description = 'Collection of PowerShell functions for managing Windows Server.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
+PowerShellVersion = '5.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -51,10 +51,10 @@ Description = 'Collection of PowerShell functions for managing Windows Server.'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = 'bin/Cassia.dll'
+RequiredAssemblies = 'Includes/Cassia.dll'
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
 # ScriptsToProcess = @()
@@ -70,22 +70,19 @@ FormatsToProcess = 'Formats/Cassia.Format.ps1xml', 'Formats/Dfs.Format.ps1xml',
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Disable-SChannelFeature', 'Get-ComputerDetail',
-               'Get-ComputerSerialNumber', 'Get-DfsrBacklogStatus', 'Get-IISLogPath',
-               'Get-LinuxCdpInfo', 'Get-RDSession', 'Install-DiskCleanupTool',
-               'Invoke-LogRotation', 'Register-LogRotationTask'
+FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
 
 # Variables to export from this module
-# VariablesToExport = @()
+VariablesToExport = @()
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
 AliasesToExport = @()
 
 # DSC resources to export from this module
-# DscResourcesToExport = @()
+DscResourcesToExport = @()
 
 # List of all modules packaged with this module
 # ModuleList = @()
@@ -98,33 +95,25 @@ PrivateData = @{
 
     PSData = @{
 
+        Prerelease =  ''
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'IIS','Log','Logs','RDP','Rotate','Rotation','SChannel','Security'
+        # Tags = @()
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/twillin912/ServerManagement/blob/stable/LICENSE'
+        # LicenseUri = ''
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/twillin912/ServerManagement'
+        # ProjectUri = ''
 
         # A URL to an icon representing this module.
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'https://github.com/twillin912/ServerManagement/blob/stable/RELEASENOTES.md'
-
-        # Prerelease string of this module
-        # Prerelease = ''
-
-        # Flag to indicate whether the module requires explicit user acceptance for install/update/save
-        # RequireLicenseAcceptance = $false
-
-        # External dependent modules of this module
-        # ExternalModuleDependencies = @()
+        ReleaseNotes = ''
 
     } # End of PSData hashtable
 
- } # End of PrivateData hashtable
+} # End of PrivateData hashtable
 
 # HelpInfo URI of this module
 # HelpInfoURI = ''
@@ -133,3 +122,16 @@ PrivateData = @{
 # DefaultCommandPrefix = ''
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
