@@ -1,51 +1,64 @@
-function Get-IISLogPath {
+function Get-IISLogPath
+{
     <#
     .SYNOPSIS
-        Retrieve webiste logging path.
+        Retrieve website logging path.
+
     .DESCRIPTION
         The Get-IISLogPath cmdlet retrieves the log file path for one or more websites configured on the target computer.
+
+    .PARAMETER Identity
+        Specifies a name of one or more websites.  Get-IISLogPath retrieves the logging path for the website specified.  If you do not specify this parameter, the cmdlet will return all configured sites.
+
     .EXAMPLE
         Get-IISLogPath
         Returns log path information for all sites
+
     .EXAMPLE
-        Get-IISLogPath -Name 'Default Web Site'
+        Get-IISLogPath -Identity 'Default Web Site'
         Returns log path information for the 'Default Web Site'
+
     .EXAMPLE
-        Get-IISLogPath -Name 'Admin*'
+        Get-IISLogPath -Identity 'Admin*'
         Returns log path information for all sites whose Name begin with 'Admin'
+
     .EXAMPLE
-        Get-IISLogPath -Name @('MySite1','MySite2')
+        Get-IISLogPath -Identity @('MySite1','MySite2')
         Returns log path information for the sites 'MySite1' and 'MySite2'
-    .LINK
-        http://psservermanagement.readthedocs.io/en/latest/functions/Get-IISLogPath
+
     .NOTES
         Author: Trent Willingham
-        Check out my other scripts and projects @ https://github.com/twillin912
+        Check out my other projects on GitHub https://github.com/HashGambit97
     #>
     [CmdletBinding()]
     [OutputType([psobject])]
     param(
-        # Specifies a name of one or more websites.  Get-IISLogPath retrieves the logging path for the website specified.  If you do not specify this parameter, the cmdlet will return all configured sites.
-        [parameter(ValueFromPipeline = $true)]
-        [string[]]$Name
+        [parameter(Position = 0, ValueFromPipeline = $true)]
+        [string[]]$Identity
     )
 
-    begin {
+    begin
+    {
         $WebsiteObjects = Get-Website
         $FilteredSites = @()
     }
 
-    process {
-        if ($Name) {
-            foreach ($SiteName in $Name) {
-                $FilteredSites += $WebsiteObjects | Where-Object { $PSItem.Name -like $Sitename }
+    process
+    {
+        if ($Identity)
+        {
+            foreach ($SiteName in $Identity)
+            {
+                $FilteredSites += $WebsiteObjects | Where-Object { $PSItem.Name -like $SiteName }
             }
         }
-        else {
+        else
+        {
             $FilteredSites = $WebsiteObjects
         }
 
-        foreach ($Site in $FilteredSites) {
+        foreach ($Site in $FilteredSites)
+        {
             $LogPath = "$($Site.logFile.directory)\W3SVC$($Site.id)"
             $LogPath = [System.Environment]::ExpandEnvironmentVariables($LogPath)
 

@@ -1,60 +1,82 @@
-function Register-LogRotationTask {
+function Register-LogRotationTask
+{
     <#
     .SYNOPSIS
-    Short description
+        Registers a scheduled task to run the Invoke-LogRotation cmdlet.
 
     .DESCRIPTION
-    Long description
+        The Register-LogRotationTask cmdlet registers a scheduled task to run the Invoke-LogRotation cmdlet with the specified parameters.
+
+
+    .PARAMETER Name
+        The name of the log rotation task. This will be used in the scheduled task name and should be descriptive of the logs being rotated.
+
+    .PARAMETER Path
+        The path(s) to the log files to be rotated. This parameter accepts one or more paths.
+
+    .PARAMETER KeepRaw
+        The number of days to keep raw log files before deletion.
+
+    .PARAMETER KeepArchives
+        The number of archived log files to keep before deletion.
+
+    .PARAMETER StartTime
+        The time of day to run the log rotation task. Default is '22:00'
+
+    .PARAMETER Include
+        A string or regex pattern to include specific log files in the rotation process.
+
+    .PARAMETER Exclude
+        A string or regex pattern to exclude specific log files from the rotation process.
 
     .EXAMPLE
-    An example
+        Register-LogRotationTask -Name 'IIS Logs' -Path C:\Inetpub\Logs\LogFiles\W3SVC1
+        This command registers a scheduled task named 'LogRotation - IIS Logs' to run the Invoke-LogRotation cmdlet with the specified path and default retention settings.
 
     .NOTES
-    General notes
+        Author: Trent Willingham
+        Check out my other projects on GitHub https://github.com/HashGambit97
     #>
     [CmdletBinding()]
     param(
-        # Specifies the name of the scheduled task with ' - LogRotation' appended.
         [Parameter(Mandatory, Position = 1)]
         [string] $Name,
 
-        # Specifies a path to one or more locations.  Invoke-LogRotation processes the log files in the specified locations.
         [Parameter(Mandatory, Position = 2)]
         [string[]] $Path,
 
-        # Specifies the number of days to keep uncompressed log files.  If you do not specify this parameter, the cmdlet will retain 5 days.
         [Parameter(Position = 3)]
         [Alias('CompressDays')]
         [int] $KeepRaw,
 
-        # Specifies the number of months to keep compresses log archives.  If you do not specify this parameter, the archives will be retained indefinately.
         [Parameter()]
         [int] $KeepArchives,
 
-        # Specifies the start time for the scheduled task.  The default value is 10:00 PM.
         [Parameter()]
         [string] $StartTime = '22:00',
 
-        # Specifies a wildcard selection string of files to include.
         [Parameter()]
         [string]$Include,
 
-        # Specifies a wildcard selection string of files to exclude.
         [Parameter()]
         [string]$Exclude
     )
 
     $Command = "Invoke-LogRotation -Path '$Path'"
-    if ($KeepRaw) {
+    if ($KeepRaw)
+    {
         $Command += " -KeepRaw $KeepRaw"
     }
-    if ($KeepArchives) {
-        $Command += " -KeepArchvies $KeepArchives"
+    if ($KeepArchives)
+    {
+        $Command += " -KeepArchives $KeepArchives"
     }
-    if ($Include) {
+    if ($Include)
+    {
         $Command += " -Include '$Include'"
     }
-    if ($Exclude) {
+    if ($Exclude)
+    {
         $Command += " -Exclude '$Exclude'"
     }
 

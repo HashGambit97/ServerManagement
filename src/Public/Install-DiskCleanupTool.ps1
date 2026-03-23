@@ -1,28 +1,32 @@
-function Install-DiskCleanupTool {
+function Install-DiskCleanupTool
+{
     <#
     .SYNOPSIS
-        Install Disk Cleanup utlility.
+        Install Disk Cleanup utility.
+
     .DESCRIPTION
         Copies the Disk Cleanup utility and supporting files from the WinSxS folder on the system to the installed locations and created a shortcut in the Administrative Tools folder.
+
+    .PARAMETER ComputerName
+        Specifies the name of the system to target.  The default value is 'localhost'.
+
+    .PARAMETER Credential
+        Specifies a user account that has permission to perform the installation on the target system(s). The default is the current user account.
+
     .EXAMPLE
         Install-DiskCleanupTools
         Installs the Disk Cleanup utility on the local system.
+
     .EXAMPLE
         Install-DiskCleanupTools -ComputerName Server01
         Installs the Disk Cleanup utility on the system named 'Server01'.
-    .INPUTS
-        ComputerName as String or Array of strings
-    .OUTPUTS
-        None
-    .LINK
-        http://psservermanagement.readthedocs.io/en/latest/functions/Install-DiskCleanupTool
+
     .NOTES
         Author: Trent Willingham
-        Check out my other projects on GitHub https://github.com/twillin912
+        Check out my other projects on GitHub https://github.com/HashGambit97
     #>
     [CmdletBinding()]
     param (
-        # Specifies the name of the computer to query.  Default value is the local computer.
         [Parameter(ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]
         [string[]] $ComputerName = 'localhost',
@@ -31,7 +35,8 @@ function Install-DiskCleanupTool {
         [PSCredential] $Credential
     )
 
-    begin {
+    begin
+    {
         $InstanceParams = @{
             'Class'     = 'Win32_OperatingSystem'
             'Namespace' = 'root\cimv2'
@@ -41,7 +46,8 @@ function Install-DiskCleanupTool {
             'ErrorAction' = 'Stop'
         }
 
-        if ($Credential) {
+        if ($Credential)
+        {
             $CimParams.Credential = $Credential
         }
 
@@ -63,44 +69,56 @@ function Install-DiskCleanupTool {
 
     }
 
-    process {
-        foreach ($Computer in $ComputerName) {
+    process
+    {
+        foreach ($Computer in $ComputerName)
+        {
             $Supported = $true
             $CimParams.ComputerName = $Computer
-            try {
+            try
+            {
                 $CimSession = NewFallbackCimSession @SessionParams
                 $OperatingSystem = Get-CimInstance -CimSession $CimSession @InstanceParams
                 $WindowsDir = $OperatingSystem.WindowsDirectory
                 $WindowsVersion = $OperatingSystem.Version
             }
-            catch {
+            catch
+            {
                 throw
             }
-            finally {
-                if ($CimSession) {
+            finally
+            {
+                if ($CimSession)
+                {
                     $CimSession.Close()
                 }
             }
 
-            switch -Wildcard ($WindowsVersion) {
-                "6.2.*" {
+            switch -Wildcard ($WindowsVersion)
+            {
+                "6.2.*"
+                {
                     $ExeSource = "$WindowsDir\WinSxS\amd64_microsoft-windows-cleanmgr_31bf3856ad364e35_6.2.9200.16384_none_c60dddc5e750072a\cleanmgr.exe"
                     $MuiSource = "$WindowsDir\WinSxS\amd64_microsoft-windows-cleanmgr.resources_31bf3856ad364e35_6.2.9200.16384_en-us_b6a01752226afbb3\cleanmgr.exe.mui"
                 }
-                "6.1.*" {
+                "6.1.*"
+                {
                     $ExeSource = "$WindowsDir\winsxs\amd64_microsoft-windows-cleanmgr_31bf3856ad364e35_6.1.7600.16385_none_c9392808773cd7da\cleanmgr.exe"
                     $MuiSource = "$WindowsDir\winsxs\amd64_microsoft-windows-cleanmgr.resources_31bf3856ad364e35_6.1.7600.16385_en-us_b9cb6194b257cc63\cleanmgr.exe.mui"
                 }
-                "6.0.*" {
+                "6.0.*"
+                {
                     $ExeSource = "$WindowsDir\winsxs\amd64_microsoft-windows-cleanmgr_31bf3856ad364e35_6.0.6001.18000_none_c962d1e515e94269\cleanmgr.exe"
                     $MuiSource = "$WindowsDir\winsxs\amd64_microsoft-windows-cleanmgr.resources_31bf3856ad364e35_6.0.6001.18000_en-us_b9f50b71510436f2\cleanmgr.exe.mui"
                 }
-                Default {
+                Default
+                {
                     $Supported = $false
                 }
             }
 
-            if (!($Supported)) {
+            if (!($Supported))
+            {
                 Write-Warning -Message "The operating system '$WindowsVersion' is not supported."
                 $CimSession.Close()
                 break
@@ -115,6 +133,7 @@ function Install-DiskCleanupTool {
         }
     }
 
-    end {
+    end
+    {
     }
 }

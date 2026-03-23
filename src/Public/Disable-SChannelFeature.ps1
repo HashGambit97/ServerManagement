@@ -3,17 +3,41 @@ function Disable-SChannelFeature
     <#
     .SYNOPSIS
         Disable server side SChannel features on one or more computers.
+
     .DESCRIPTION
         The Disable-SChannelFeature cmdlet disables features in the SChannel security suite on Windows computers.  This cmdlet can be used to disable ciphers, key exchanges, and protocols that are consider insecure.
+
+    .PARAMETER ComputerName
+        Specifies the name of the system to target.
+
+    .PARAMETER All
+        Disables all insecure SChannel features.
+
+    .PARAMETER 3Des
+        Disables SChannel 3DES cipher usage.
+
+    .PARAMETER Dhe
+        Disables SChannel Diffie-Hellman key exchange.
+
+    .PARAMETER Rc4
+        Disables SChannel RC4 cipher usage.
+
+    .PARAMETER Ssl2
+        Disables SChannel SSL v2 protocol usage.
+
+    .PARAMETER Ssl3
+        Disables SChannel SSL v3 protocol usage.
+
+    .PARAMETER Tls1
+        Disables SChannel TLS v1.0 protocol usage.
+
+    .PARAMETER Tls11
+        Disables SChannel TLS v1.1 protocol usage.
+
     .EXAMPLE
         Disable-SChannelFeature -ComputerName 'MyServer' -Rc4
         Disable the RC4 cipher on the computer 'MyServer'.
-    .INPUTS
-        System.String
-    .OUTPUTS
-        None
-    .LINK
-        http://psservermanagement.readthedocs.io/en/latest/functions/Disable-SChannelFeature
+
     .NOTES
         Author: Trent Willingham
         Check out my other projects on GitHub https://github.com/HashGambit97
@@ -22,7 +46,6 @@ function Disable-SChannelFeature
         SupportsShouldProcess
     )]
     param(
-        # Specifies the name of the system to target.
         [Parameter(
             Mandatory = $true,
             Position = 0,
@@ -30,35 +53,27 @@ function Disable-SChannelFeature
         )]
         [string[]]$ComputerName,
 
-        # Disables all insecure SChannel features.
         [Parameter()]
         [switch]$All,
 
-        # Disables SChannel 3DES cipher usage.
         [Parameter()]
         [switch]$3Des,
 
-        # Disables SChannel Diffie-Hellman key exchange.
         [Parameter()]
         [switch]$Dhe,
 
-        # Disables SChannel RC4 cipher usage.
         [Parameter()]
         [switch]$Rc4,
 
-        # Disables SChannel SSL v2 protocol usage.
         [Parameter()]
         [switch]$Ssl2,
 
-        # Disables SChannel SSL v3 protocol usage.
         [Parameter()]
         [switch]$Ssl3,
 
-        # Disables SChannel TLS v1.0 protocol usage.
         [Parameter()]
         [switch]$Tls1,
 
-        # Disables SChannel TLS v1.1 protocol usage.
         [Parameter()]
         [switch]$Tls11
     )

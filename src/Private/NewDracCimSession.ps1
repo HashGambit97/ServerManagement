@@ -1,4 +1,23 @@
-function NewDracCimSession {
+function NewDracCimSession
+{
+    <#
+    .SYNOPSIS
+        Creates a CIM session to a Dell DRAC device.
+
+    .DESCRIPTION
+        The NewDracCimSession cmdlet creates a CIM session to a Dell DRAC device using the specified computer name and credentials.
+
+    .PARAMETER ComputerName
+        Specifies the name of the Dell DRAC device to connect to.
+
+    .PARAMETER Credential
+        Specifies the credentials to use for connecting to the Dell DRAC device.
+
+    .EXAMPLE
+        $Credential = Get-Credential
+        New-DracCimSession -ComputerName 'DRAC01' -Credential $Credential
+        This command creates a CIM session to the Dell DRAC device named 'DRAC01' using the provided credentials.
+    #>
     [OutputType("CimSession")]
     param (
         [parameter(Mandatory = $true)]

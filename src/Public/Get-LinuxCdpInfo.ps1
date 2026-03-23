@@ -1,5 +1,35 @@
-function Get-LinuxCdpInfo {
-    # Requires -Module Posh-SSH -Version 3.0
+# Requires -Module Posh-SSH -Version 3.0
+function Get-LinuxCdpInfo
+{
+    <#
+    .SYNOPSIS
+        Retrieves CDP information from Linux machines.
+
+    .DESCRIPTION
+        The Get-LinuxCdpInfo cmdlet retrieves CDP information from Linux machines using SSH and tcpdump.  The cmdlet connects to the target machine, retrieves a list of active network interfaces, and then listens for CDP packets on those interfaces to extract information about connected switches and ports.
+
+    .PARAMETER ComputerName
+        Specifies the name of the system to target.
+
+    .PARAMETER Interface
+        Specifies a wildcard selection string of network interfaces to monitor for CDP packets.  The default
+        value is 'eth0'.
+
+    .PARAMETER Credential
+        Specifies the credentials to use for connecting to the remote computer.
+
+    .PARAMETER Concurrency
+        Specifies the number of concurrent SSH sessions to use when connecting to multiple computers.  The default
+        value is 8.
+
+    .EXAMPLE
+        Get-LinuxCdpInfo -ComputerName 'MyLinuxServer' -Credential (Get-Credential)
+        Retrieves CDP information from 'MyLinuxServer' using the provided credentials.
+
+    .NOTES
+        Author: Trent Willingham
+        Check out my other projects on GitHub https://github.com/HashGambit97
+    #>
     [CmdletBinding()]
     param(
         [Parameter(
@@ -18,8 +48,9 @@ function Get-LinuxCdpInfo {
         [int] $Concurrency = 8
     )
 
-    begin {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '')]
+    begin
+    {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssignments', '')]
         $SessionState = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
         $RunspacePool = [System.Management.Automation.Runspaces.RunspaceFactory]::CreateRunspacePool(1, ($Concurrency + 1))
         $RunspacePool.Open()
@@ -39,49 +70,57 @@ function Get-LinuxCdpInfo {
                 "TenGigabitEthernet" = "Te "
             }
             $InterfacesFromTcpdump = @()
-            try {
+            try
+            {
                 $SshSession = New-SSHSession -ComputerName $ComputerName -Credential $Credential -AcceptKey -Force
 
                 $Result = Invoke-SSHCommand -SSHSession $SshSession -Command 'tcpdump -D'
-                foreach ($Line in $Result.Output) {
-                    if ($Line -notmatch '^[0-9]+.usbmon') {
+                foreach ($Line in $Result.Output)
+                {
+                    if ($Line -notmatch '^[0-9]+.usbmon')
+                    {
                         $InterfacesFromTcpdump += $Line.Trim().Split('.')[1]
                     }
                 }
                 Write-Debug -Message "Active interface list from tcpdump`n$($InterfacesFromTcpdump | Out-String)"
 
-                foreach ($Filter in $Interface) {
-                    $IfaceList += $InterfacesFromTcpdump | Where-Object { $_ -like $Filter }
-                    Write-Debug -Message "Interfaces matching filter $($Filter):`n$($IfaceList | Out-String)"
+                foreach ($Filter in $Interface)
+                {
+                    $InterfaceList += $InterfacesFromTcpdump | Where-Object { $_ -like $Filter }
+                    Write-Debug -Message "Interfaces matching filter $($Filter):`n$($InterfaceList | Out-String)"
                 }
 
-                foreach ($Iface in $IfaceList) {
-                    $Command = "tcpdump -i $Iface -v -nn -s 1500 -c 1 -G 60 'ether[20:2] == 0x2000'"
+                foreach ($Interface in $InterfaceList)
+                {
+                    $Command = "tcpdump -i $Interface -v -nn -s 1500 -c 1 -G 60 'ether[20:2] == 0x2000'"
                     $Result = Invoke-SSHCommand -SSHSession $SshSession -Command $Command
                     Write-Debug -Message ($Result.Output | Out-String)
 
                     $NativeVlan = ($Result.Output | Where-Object { $_ -match '\(0x0a\)' }).ToString().Split(' ')[-1] -replace ("'", "")
                     $PortName = ($Result.Output | Where-Object { $_ -match '\(0x03\)' }).ToString().Split(' ')[-1] -replace ("'", "")
                     $PortAbbreviation.GetEnumerator() | ForEach-Object { $PortName = $PortName.Replace($_.Name, $_.Value) }
-                    $SwitchAdress = ($Result.Output | Where-Object { $_ -match '\(0x02\)' }).ToString().Split(' ')[-1] -replace ("'", "")
+                    $SwitchAddress = ($Result.Output | Where-Object { $_ -match '\(0x02\)' }).ToString().Split(' ')[-1] -replace ("'", "")
                     $SwitchName = ($Result.Output | Where-Object { $_ -match '\(0x01\)' }).ToString().Split(' ')[-1] -replace ("'", "")
                     $Output = New-Object -TypeName PSObject -Property @{
                         'ComputerName'  = $ComputerName
-                        'Interface'     = $Iface
+                        'Interface'     = $Interface
                         'NativeVlan'    = $NativeVlan
                         'PortName'      = $PortName
-                        'SwitchAddress' = $SwitchAdress
+                        'SwitchAddress' = $SwitchAddress
                         'SwitchName'    = $SwitchName
                     }
                     $Output.PSObject.TypeNames.Insert(0, 'ServerManagement.CdpInfo')
                     Write-Output -InputObject $Output
                 }
             }
-            catch {
+            catch
+            {
                 throw
             }
-            finally {
-                if ($SshSession) {
+            finally
+            {
+                if ($SshSession)
+                {
                     $SshSession.Disconnect()
                     $null = Remove-SSHSession $SshSession
                 }
@@ -89,15 +128,21 @@ function Get-LinuxCdpInfo {
         }
     }
 
-    process {
-        if ($DebugPreference) {
-            foreach ($Computer in $ComputerName) {
+    process
+    {
+        if ($DebugPreference)
+        {
+            foreach ($Computer in $ComputerName)
+            {
                 & $ScriptBlock -ComputerName $Computer -Interface $Interface -Credential $Credential
             }
         }
-        else {
-            foreach ($Computer in $ComputerName) {
-                if (Test-Connection -ComputerName $Computer -Count 1 -Quiet) {
+        else
+        {
+            foreach ($Computer in $ComputerName)
+            {
+                if (Test-Connection -ComputerName $Computer -Count 1 -Quiet)
+                {
                     $PowerShellInstance = [powershell]::Create()
                     $PowerShellInstance.RunspacePool = $RunspacePool
                     [void]$PowerShellInstance.AddScript($ScriptBlock)
@@ -116,16 +161,20 @@ function Get-LinuxCdpInfo {
                     $Temp.Handle = $Handle
                     [void]$Commands.Add($Temp)
                 }
-                else {
+                else
+                {
                     Write-Warning -Message "Cannot connect to computer '$Computer', because it is offline."
                 }
             }
             $JobCount = $Commands.Count
 
-            while ($Commands) {
+            while ($Commands)
+            {
                 Write-Progress -Activity "Querying CDP Information" -Status "$($Commands.Count) Remaining" -PercentComplete (($JobCount - $Commands.Count) / $JobCount * 100)
-                foreach ($Command in $Commands.ToArray()) {
-                    if ($Command.Handle.IsCompleted -eq $true) {
+                foreach ($Command in $Commands.ToArray())
+                {
+                    if ($Command.Handle.IsCompleted -eq $true)
+                    {
                         Write-Output -InputObject $Command.PowerShell.EndInvoke($Command.Handle)
                         $Command.PowerShell.Dispose()
                         $Commands.Remove($Command)
@@ -136,7 +185,8 @@ function Get-LinuxCdpInfo {
         }
     }
 
-    end {
+    end
+    {
         $RunspacePool.Close()
         $RunspacePool.Dispose()
     }
