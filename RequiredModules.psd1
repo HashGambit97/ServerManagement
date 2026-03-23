@@ -18,8 +18,6 @@
     ModuleBuilder               = 'latest'
     ChangelogManagement         = 'latest'
     Sampler                     = 'latest'
-
     MarkdownLinkCheck           = 'latest'
 
 }
-

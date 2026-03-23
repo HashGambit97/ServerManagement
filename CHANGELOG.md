@@ -5,27 +5,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
 
-- For new features.
+- Updated the 'Disable-SChannelFeature' cmdlet to include options to disable
+  TLS1.0 and TLS1.1
+
+## [0.7.0] - 2026-03-22
 
 ### Changed
 
-- For changes in existing functionality.
+- Refactored module scaffolding and build process.
 
-### Deprecated
+## [0.6.0] - 2019-12-18
 
-- For soon-to-be removed features.
+### Changed
 
-### Removed
+- Added feature to LogRotation cmdlets for removing archive files after x months.
 
-- For now removed features.
+## [0.5.0] - 2019-12-18
 
-### Fixed
+### Added
 
-- For any bug fix.
-
-### Security
-
-- In case of vulnerabilities.
-
+- New function 'Get-LinuxCDPInfo'
+- New function 'Get-RDSession'
+- New function 'Install-DiskCleanupTool'
