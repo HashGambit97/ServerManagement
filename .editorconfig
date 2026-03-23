@@ -1,14 +1,40 @@
+# EditorConfig is awesome: http://EditorConfig.org
+#
+# Copied from https://github.com/PowerShell/PowerShellEditorServices/blob/master/.editorconfig
+
 # top-most EditorConfig file
 root = true
 
 [*]
-end_of_line = crlf
 indent_style = space
-indent_size = 4
 insert_final_newline = true
+
+[*.{cs}]
+indent_size = 4
+trim_trailing_whitespace = true
+file_header_template = Copyright (c) Microsoft Corporation.\nLicensed under the MIT License.
+csharp_space_before_open_square_brackets = true
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_before_open_square_brackets = false
+csharp_style_expression_bodied_constructors = when_on_single_line
+csharp_style_expression_bodied_methods = when_on_single_line
+csharp_style_expression_bodied_operators = when_on_single_line
+csharp_style_expression_bodied_properties = true
+csharp_style_expression_bodied_indexers = true
+csharp_style_expression_bodied_accessors = true
+csharp_style_expression_bodied_lambdas = when_on_single_line
+
+[*.{json}]
+indent_size = 2
 trim_trailing_whitespace = true
 
-# 4 space indentation
-[*.{md,yml}]
-indent_style = space
+[*.{md}]
+indent_size = 2
+trim_trailing_whitespace = true
+
+[*.{ps1,psm1,psd1}]
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{ps1xml,props,xml,yaml}]
 indent_size = 2

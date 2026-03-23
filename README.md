@@ -1,24 +1,13 @@
-# ServerManagement PowerShell Module
+# ServerManagement
 
-[![Build status](https://ci.appveyor.com/api/projects/status/stdm6vrj6i4ygtbn?svg=true)](https://ci.appveyor.com/project/twillin912/psservermanagement)
-[![Documentation Status](http://readthedocs.org/projects/PSServerManagement/badge/?version=develop)](http://PSServerManagement.readthedocs.io/en/develop/?badge=develop)
+Collection of commands for server management.
 
-Collection of PowerShell functions for managing Windows Server.
+## Make it yours
 
-## Installation
+---
+Generated with Plaster and the SampleModule template
 
-Install from PSGallery
 
-```powershell
-PS> Install-Module -Name ServerManagement
-```
+This is a sample Readme
 
-## Getting Started
-
-Get a list of available commands
-
-```powershell
-PS> Get-Command -Module ServerManagement
-```
-
-## Notes
+## Make it yours
